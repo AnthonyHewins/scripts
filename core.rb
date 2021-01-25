@@ -40,3 +40,14 @@ def err(err_msg, exit_code=1)
 	puts "#{" ERROR ".bg_red.bold} #{err_msg.red}"
 	exit exit_code
 end
+
+def fileWrite(filename, contents, overwrite=false)
+	existsAlready = File.exists?(filename)
+	if existsAlready && !overwrite
+		err("file exists already and overwrite is false, quitting")
+	end
+
+	operation = existsAlready ? " OVERWRITE " : " WRITE "
+	puts "#{operation.bg_cyan.bold} #{filename.cyan}"
+	File.write filename, contents
+end

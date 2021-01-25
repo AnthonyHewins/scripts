@@ -1,0 +1,34 @@
+package main
+
+import (
+	"os"
+	"fmt"
+)
+
+func main() {
+	n := len(os.Args)
+	if n == 0 {
+		help(1, "not enough args")
+	}
+
+	switch os.Args[0] {
+	case "h", "help", "-h", "--help":
+		help(0)
+	default:
+		help(1, "don't understand arg:", os.Args[0])
+	}
+}
+
+func help(exitCode int, extraMessages ...interface{}) {
+	if len(extraMessages) != 0 {
+		fmt.Println(extraMessages...)
+	}
+
+	fmt.Println(helpText)
+	os.Exit(exitCode)
+}
+
+const helpText = `usage: <%= script_name %> ARGS
+
+where ARGS is one of:
+`
