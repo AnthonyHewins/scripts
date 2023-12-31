@@ -50,11 +50,7 @@ func (s *LogRunner) InfoBold(str string, args ...any) {
 }
 
 func (s *LogRunner) Fatal(str string, args ...any) {
-	fmt.Fprintf(
-		s.errExporter,
-		errColor.Sprintf(str, args...)+"\n",
-	)
-
+	s.fatal(str, args...)
 	os.Exit(1)
 }
 
@@ -68,8 +64,15 @@ func (s *LogRunner) Run(cmd string, args ...string) {
 	command.Dir = s.dir
 	buf, err := command.Output()
 	if err != nil {
-		s.Fatal("failed running command: %v", err)
+		s.fatal("failed running command: %v", err)
 	}
 
 	fmt.Fprint(s.logExporter, string(buf))
+}
+
+func (s *LogRunner) fatal(str string, args ...any) {
+	fmt.Fprintf(
+		s.errExporter,
+		errColor.Sprintf(str, args...)+"\n",
+	)
 }
