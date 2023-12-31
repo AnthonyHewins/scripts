@@ -17,8 +17,8 @@ var (
 	errColor = color.New(color.FgWhite, color.Bold, color.BgRed)
 	//	dirColor      = color.New(color.FgWhite, color.Bold, color.BgMagenta)
 	//	templateColor = color.New(color.FgWhite, color.Bold, color.BgHiBlue)
-	commandTitleColor = color.New(color.FgWhite, color.Bold, color.BgGreen)
-	commandTextColor  = color.New(color.FgGreen)
+	commandTitleColor = color.New(color.FgWhite, color.Bold, color.BgHiMagenta)
+	commandTextColor  = color.New(color.FgMagenta)
 )
 
 type LogRunner struct {
@@ -68,7 +68,7 @@ func (s *LogRunner) Run(cmd string, args ...string) {
 	command.Dir = s.dir
 	buf, err := command.Output()
 	if err != nil {
-		s.Fatal("failed running command: %v. Your app should still be built, but gofast couldn't do all the work for you", err)
+		s.Fatal("failed running command: %v", err)
 	}
 
 	fmt.Fprint(s.logExporter, string(buf))
