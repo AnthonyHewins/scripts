@@ -61,13 +61,13 @@ func (s *LogRunner) Run(cmd string, args ...string) {
 	)
 
 	command := exec.Command(cmd, args...)
+	command.Stderr = os.Stderr
+	command.Stdout = os.Stdout
 	command.Dir = s.dir
-	buf, err := command.Output()
-	if err != nil {
-		s.fatal("failed running command: %v", err)
-	}
 
-	fmt.Fprint(s.logExporter, string(buf))
+	if err := command.Run(); err != nil {
+		s.Fatal("command failed: %v", err)
+	}
 }
 
 func (s *LogRunner) fatal(str string, args ...any) {
