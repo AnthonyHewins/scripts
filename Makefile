@@ -4,9 +4,10 @@
 # command aliases
 test := CONFIG_ENV=test go test ./...
 
-targets := gitp gitm
+targets := gitp gitm sc
 
-VERSION ?= v0.0.0
+GOBIN ?= $(shell go env GOBIN)
+default_branch ?= master
 build_flag_path := github.com/AnthonyHewins/scripts
 BUILD_FLAGS := 
 ifneq (,$(wildcard ./vendor))
@@ -17,10 +18,10 @@ endif
 all: $(targets) ## Make everything
 
 $(targets):
-	go build $(BUILD_FLAGS) -ldflags="-X '$(build_flag_path)/cli/cmd.version=$(VERSION)'" -o bin/$@ cmd/$@/*.go
+	go build $(BUILD_FLAGS) -ldflags="-X 'main.defaultMasterBranch=$(default_branch)'" -o bin/$@ cmd/$@/*.go
 
 deploy: $(targets)
-	cp ./bin/* ~/.local/bin
+	cp ./bin/* $(GOBIN)
 
 sql: ## Generate SQL
 	(cd sql; sqlc generate)

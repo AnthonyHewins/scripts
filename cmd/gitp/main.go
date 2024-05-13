@@ -8,11 +8,15 @@ import (
 	"github.com/AnthonyHewins/scripts/internal/app"
 )
 
+var defaultMasterBranch = "master"
+
 var helpText = `usage: gitp [COMMAND | <commit message>]
 where COMMAND is:
 
 h, help				Print this help
 -bn					Use the git branch for the commit message
+
+Anything else is interpreted as a commit message
 `
 
 func main() {
@@ -26,7 +30,7 @@ func main() {
 	case 1:
 		// no op
 	default:
-		push(l, os.Args[1:]...)
+		push(l, defaultMasterBranch, os.Args[1:]...)
 	}
 
 	commitMsg := os.Args[0]
@@ -35,7 +39,7 @@ func main() {
 		fmt.Println(helpText)
 		os.Exit(0)
 	case "-bn":
-		branch, err := app.CurrentGitBranch(dir)
+		branch, err := l.CurrentGitBranch(dir)
 		if err != nil {
 			l.Fatal("Failed fetching git branch name: %s", err.Error())
 		}
@@ -43,13 +47,17 @@ func main() {
 		commitMsg = branch
 	}
 
-	push(l, commitMsg)
+	gitBranch, err := l.CurrentGitBranch(".")
+	if err != nil {
+		panic(err)
+	}
+
+	push(l, gitBranch, commitMsg)
 }
 
-func push(l *app.LogRunner, msg ...string) {
+func push(l *app.LogRunner, branch string, msg ...string) {
 	l.Run("git", "status")
 	l.Run("git", "add", "-A")
 	l.Run("git", "commit", "-m", strings.Join(msg, " "))
-	l.Run("git", "push", "origin", "master")
-	os.Exit(0)
+	l.Run("git", "push", "origin", branch)
 }
