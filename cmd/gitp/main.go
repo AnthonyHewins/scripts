@@ -24,16 +24,9 @@ func main() {
 
 	l := app.NewLogRunner(dir, os.Stdout, os.Stderr)
 
-	switch len(os.Args) {
-	case 0:
-		l.Fatal("must supply arguments for commit message")
-	case 1:
-		// no op
-	default:
-		push(l, defaultMasterBranch, os.Args[1:]...)
-	}
+	args := l.ParseArgs(&app.Arg{HelpText: helpText})
 
-	commitMsg := os.Args[0]
+	commitMsg := args[0]
 	switch commitMsg {
 	case "h", "help":
 		fmt.Println(helpText)

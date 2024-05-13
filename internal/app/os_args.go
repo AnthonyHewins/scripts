@@ -10,8 +10,10 @@ func (l *LogRunner) ParseArgs(a *Arg) []string {
 	n := len(os.Args)
 
 	switch n {
-	case 1:
-		arg := os.Args[0]
+	case 0:
+		l.Fatal("missing args")
+	case 2:
+		arg := os.Args[1]
 		if arg == "help" || arg == "-h" || arg == "--help" {
 			l.logExporter.Write([]byte(a.HelpText))
 			os.Exit(0)
