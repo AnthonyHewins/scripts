@@ -1,14 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
 	"github.com/AnthonyHewins/scripts/internal/app"
 )
-
-var defaultMasterBranch = "master"
 
 var helpText = `usage: gitp [COMMAND | <commit message>]
 where COMMAND is:
@@ -26,11 +23,8 @@ func main() {
 
 	args := l.ParseArgs(&app.Arg{HelpText: helpText})
 
-	commitMsg := args[0]
-	switch commitMsg {
-	case "h", "help":
-		fmt.Println(helpText)
-		os.Exit(0)
+	commitMsg := ""
+	switch args[1] {
 	case "-bn":
 		branch, err := l.CurrentGitBranch(dir)
 		if err != nil {
@@ -38,6 +32,8 @@ func main() {
 		}
 
 		commitMsg = branch
+	default:
+		strings.Join(os.Args[1:], " ")
 	}
 
 	gitBranch, err := l.CurrentGitBranch(".")
@@ -45,12 +41,8 @@ func main() {
 		panic(err)
 	}
 
-	push(l, gitBranch, commitMsg)
-}
-
-func push(l *app.LogRunner, branch string, msg ...string) {
 	l.Run("git", "status")
 	l.Run("git", "add", "-A")
-	l.Run("git", "commit", "-m", strings.Join(msg, " "))
-	l.Run("git", "push", "origin", branch)
+	l.Run("git", "commit", "-m", commitMsg)
+	l.Run("git", "push", "origin", gitBranch)
 }
