@@ -33,7 +33,7 @@ func main() {
 
 		commitMsg = branch
 	default:
-		strings.Join(os.Args[1:], " ")
+		commitMsg = "'" + strings.Join(os.Args[1:], " ") + "'"
 	}
 
 	gitBranch, err := l.CurrentGitBranch(".")

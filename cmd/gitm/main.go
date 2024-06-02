@@ -20,6 +20,18 @@ func main() {
 	dir := "."
 	l := app.NewLogRunner(dir, os.Stdout, os.Stderr)
 
+	branches, err := l.GitBranches()
+	if err != nil {
+		os.Exit(1)
+	}
+
+	for _, v := range branches {
+		if v == "master" || v == "main" {
+			l.Info("Detected default branch %s", v)
+			defaultMasterBranch = v
+		}
+	}
+
 	branch, err := l.CurrentGitBranch(dir)
 	if err != nil {
 		l.Fatal("Failed fetching git branch name: %s", err.Error())
