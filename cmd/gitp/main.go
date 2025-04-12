@@ -25,7 +25,7 @@ func main() {
 
 	commitMsg := ""
 	switch args[1] {
-	case "-bn":
+	case "-bn", "-b":
 		branch, err := l.CurrentGitBranch(dir)
 		if err != nil {
 			l.Fatal("Failed fetching git branch name: %s", err.Error())
