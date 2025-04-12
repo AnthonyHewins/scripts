@@ -32,10 +32,10 @@ func main() {
 	default:
 		if arg := os.Args[1]; arg == "help" || arg == "--help" || arg == "-h" {
 			fmt.Println(helpText)
-			os.Exit(1)
+			os.Exit(0)
 		}
 
-		l.Fatal("invalid arg: %s", os.Args[0])
+		l.Fatal("invalid arg: %s", os.Args[1])
 	}
 
 	if branch == defaultMasterBranch {
